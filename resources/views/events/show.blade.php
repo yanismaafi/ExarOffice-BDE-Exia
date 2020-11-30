@@ -38,8 +38,46 @@
             </div>
         </div>
 
+        <div class="row mt-5 justify-content-center">
+            <div class="col-md-6 text-center">
+              <h2 class="section-title mb-1">Autres évènement</h2>
+              <p>Les évènements à venir à ne pas rater</p>
+
+            </div>
+        </div>
+
+        <div class="row">
+
+            @foreach ($events as $event)
+    
+            <div class="col-lg-4 col-md-6 mb-5">
+              <div class="product-item">
+                <figure>
+                  <a href="{{ route('event.show',$event->slug) }}"><img src="{{ asset('images/events/'. $event->image) }}" alt="Image" title="{{ $event->name }}" class="img-fluid" style="height:220px"></a>
+                </figure>
+                <div class="px-4">
+                  <h4><a href="{{ route('event.show',$event->slug) }}">{{ $event->name }}</a></h4>
+                  <p class="mb-4">Date de l'évenement : {{ \Carbon\Carbon::parse($event->date)->toFormattedDateString() }}</p>
+                  
+                  <div class="mb-4"> 
+                  <div class="price">{{ Str::words($event->description,20,' . . .') }}</div>
+                  </div>
+                  <div>
+                    <a href="{{ route('event.show',$event->slug) }}" class="btn btn-black mr-1 rounded-0">En savoir plus</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          @endforeach
+        </div>
     </div>
 </div>
+
+
+    </div>
+</div>
+
 
 
 
