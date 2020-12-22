@@ -9,11 +9,7 @@
         <li><a href="{{ route('product.index') }}" class="nav-link">Boutique</a></li>
     
         @if(auth::check())
-            <li>
-                <a href="{{ route('cart.index') }}" class="nav-link"><i class="fa fa-shopping-cart fa-lg"></i> 
-                    <span class="badge badge-pill badge-dark"> {{ Cart::count() }} </span>
-                </a>
-            </li>
+
             <li>
                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">
                     @if (Empty(auth::user()->profile_picture) )
@@ -21,18 +17,28 @@
                     @else  
                       <img id="profile_picture" src="{{ asset('images/users/'.auth::user()->profile_picture) }}" class="rounded-circle z-depth-0" alt="Avatar_image" height="40">
                     @endif 
-                     {{auth::user()->name}}
+                     {{ auth::user()->name }}
                  </a>
+                 
                 <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
+                  
                     <a class="dropdown-item" href="{{ route('profile.show',auth::id()) }}">Profil</a>
+
                     @if (auth::user()->isAdmin())
                        <a class="dropdown-item" href="{{ route('admin.index') }}"> Espace admin</a>
                     @endif
+
+                    <a class="dropdown-item" href="{{ route('cart.index') }}" class="nav-link"> Mon panier
+                        <span class="badge badge-pill badge-dark"> {{ Cart::count() }} </span>
+                    </a>
+
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="dropdown-item">Déconnexion</button>
                     </form>
+                    
                 </div>
+
             </li>
         @else 
             <li>

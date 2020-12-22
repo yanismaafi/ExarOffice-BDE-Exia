@@ -34,6 +34,6 @@ class HomeController extends Controller
             'message' => $request->message,
         ]);
 
-        return response()->json(['success' => true]);
+        return response()->json('success');
     }
 }
