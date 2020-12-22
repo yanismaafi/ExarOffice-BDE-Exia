@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('role')->default('User');
             $table->string('cycle')->nullable();
             $table->text('bio')->nullable();
+            $table->boolean('registred')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

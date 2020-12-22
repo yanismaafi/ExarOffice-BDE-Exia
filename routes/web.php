@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 /* Home Routes */
-Route::get('/accueil','HomeController@index')->name('home.index');
-Route::post('/accueil','HomeController@contact')->name('home.contact');
+Route::get('/','HomeController@index')->name('home.index');
+Route::post('/','HomeController@contact')->name('home.contact');
 Route::get('/a-propos','HomeController@about')->name('home.about');
 Route::get('/admin/accueil','HomeController@index')->name('admin.index')->middleware('admin');
 
@@ -27,6 +27,7 @@ Route::resource('profile', ProfileController::class, ['names' => 'profile'])->ex
 /* Event Routes */
 Route::resource('/evenement', EventController::class, ['names' => 'event'])->only(['index','show']);
 Route::post('/evenement/recherche','EventController@search')->name('event.search');
+Route::post('/evenement/inscription/{id}','EventController@register');
 
 /* Blog Routes */ 
 Route::resource('/blog', PostController::class, ['name' => 'blog'])->except(['edit','update']);
@@ -37,6 +38,7 @@ Route::post('/blog/comment','PostController@comment')->name('blog.comment');
 Route::get('/produits','ProductController@index')->name('product.index');
 Route::get('/produit/{slug}','ProductController@show')->name('product.show');
 Route::post('/rehcerche','ProductController@search')->name('product.search');
+
 
 /* Cart Routes */
 Route::resource('/panier', CartController::class, ['names' => 'cart'])->except('edit','update','destroy');

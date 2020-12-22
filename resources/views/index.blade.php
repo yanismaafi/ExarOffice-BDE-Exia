@@ -14,7 +14,7 @@
                 <h1>Bureau des élèves Exia</h1>
                 <p class="mb-5 lead font-weight-normal">Le bureau des élèves "ExarOffice" est une association de l’Exia centre d'Alger ayant pour but d’organiser et d’animer la vie estudiantine des étudiants à travers des événements culturels et festifs. </p>
                 <div>
-                  <a href="/accueil#contact-section" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 mb-lg-0 mb-2 d-block d-sm-inline-block">Contactez-nous</a>
+                  <a href="/#contact-section" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 mb-lg-0 mb-2 d-block d-sm-inline-block">Contactez-nous</a>
                   <a href="{{ route('register') }}" class="btn btn-white py-3 px-5 rounded-0 d-block d-sm-inline-block">Rejoindre l'Équipe du BDE</a>
                 </div>
               </div>
@@ -74,7 +74,11 @@
       </div>  <!--End testimonial Section -->
 
     
+
+      <!-- Contact Section -->
       @include('includes.contact')
+      <!-- End Contact Section -->
+
     
 @endsection
     

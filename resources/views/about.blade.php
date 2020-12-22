@@ -29,7 +29,7 @@
                 <h2 class="section-title mb-3">Notre Objectif</h2>
             </div>
         </div>
-        <div class="row align-items-stretch">
+        <div class="row align-items-stretch mt-2">
             <div class="col-md-6 col-lg-4 mb-4 mb-lg-4" data-aos="fade-up">
                 <div class="unit-4 d-flex">
                     <div class="unit-4-icon mr-4"><span class="text-primary icon-work"></span></div>

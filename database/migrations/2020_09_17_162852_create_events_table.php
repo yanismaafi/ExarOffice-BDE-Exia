@@ -23,7 +23,7 @@ class CreateEventsTable extends Migration
             $table->date('date');
             $table->integer('nbrPlaces');
             $table->timestamps();
-
+     
         });
     }
 

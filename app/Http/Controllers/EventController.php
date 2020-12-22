@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Event;
+use App\User;
+use auth;
 use Cocur\Slugify\Slugify;
 use Illuminate\Http\Request;
 use App\Http\Requests\EventRequest;
 use App\Http\Requests\SearchRequest;
+
 
 
 class EventController extends Controller
@@ -168,5 +171,29 @@ class EventController extends Controller
         return view('admin.event',compact('events'));
     }
 
+
+
+    public function register($id)
+    {  
+       
+        $event = Event::findOrFail($id);
+        $user = User::find(auth::id());
+       
+        if($user->registered == true && $user->events->contains($id))
+        {
+            return response()->json('already registred');
+
+        }else
+        {
+            $event->decrement('nbrPlaces');
+            $user->registered = true;
+
+            $user->events()->attach($id);
+            $event->users()->attach(auth::id());
+           
+            return response()->json('success');
+        }
+        
+    }
 
 }

@@ -3,7 +3,7 @@
 @section('content')
 
 
-<div class="site-section bg-light">
+  <div class="site-section bg-light">
     <div class="container">
         <div class="row mt-5 justify-content-center">
             <div class="col-md-6 text-center">
@@ -28,10 +28,10 @@
                     <div class="price text-danger">Place(s) restante : <span> {{ $event->nbrPlaces }} </span></div>
                     </div>
 
-                    <form action="{{ route('cart.store') }}" method="POST">
+                    <form method="POST">
                     @csrf
                         <input type="hidden" name="event_id" value="{{ $event->id }}">
-                        <button type="submit" class="btn btn-black rounded-0 d-block d-lg-inline-block">Je m'inscris</button>
+                        <button id="submit" class="btn btn-black rounded-0 d-block d-lg-inline-block">Je m'inscris</button>
                     </form>
 
                 </div>
@@ -72,14 +72,60 @@
           @endforeach
         </div>
     </div>
-</div>
+  </div>
 
 
-    </div>
-</div>
+  <script type="text/javascript">
 
+      $("#submit").on('click',function(e){
+      e.preventDefault();
+  
+      var eventId = $("input[name=event_id]").val();
 
+     
+     $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+  
+        $.ajax({
+  
+          type:'POST',
+          url: '/evenement/inscription/'+eventId,
+          typeData:'JSON',
+  
+          
+          success:function(data)
+          {
+            const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'bottom-end',
+                  showConfirmButton: false,
+                  timer: 3000
+                });
+             
+              if(data == 'success')
+              {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Insription reussi, veuillez consulter vos mails.'
+                })
 
+              }else
+              {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Vous étes déja inscris à cet évènement.'
+                })
+              }
+          },
+          
+      });
+      
+  });
+  
+  </script>
 
 @endsection
 

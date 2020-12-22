@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Comment');
     }
 
+    public function events()
+    {
+        return $this->belongsToMany('App\Event','registration','user_id','event_id');
+    }
+
 
     public function isAdmin()
     {
