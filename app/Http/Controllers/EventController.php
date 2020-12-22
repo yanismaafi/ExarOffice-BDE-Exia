@@ -186,7 +186,7 @@ class EventController extends Controller
         }else
         {
             $event->decrement('nbrPlaces');
-            $user->registered = true;
+            $user->registred = true;
 
             $user->events()->attach($id);
             $event->users()->attach(auth::id());
