@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use auth;
-use App\Post;
-use App\Comment;
+use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogRequest;
 use App\Http\Requests\CommentRequest;

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Event;
-use App\User;
 use auth;
+use Carbon\Carbon;
+use App\Models\Event;
+use App\Models\User;
 use Cocur\Slugify\Slugify;
 use Illuminate\Http\Request;
 use App\Http\Requests\EventRequest;

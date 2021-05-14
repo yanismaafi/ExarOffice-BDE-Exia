@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
-use App\Contact;
-use App\Product;
+use App\Models\Event;
+use App\Models\Contact;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContactRequest;
 

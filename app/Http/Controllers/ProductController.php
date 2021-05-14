@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Order;
-use App\Product;
-use App\Category;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Category;
 use Cocur\Slugify\Slugify;
 use Illuminate\Http\Request;
 use App\Http\Requests\SearchRequest;

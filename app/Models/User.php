@@ -1,10 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Casts\SafeCast;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -34,18 +35,23 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
+        'name' => SafeCast::class,
+        'email' => SafeCast::class,
+        'subtitle' => SafeCast::class,
+        'password' => SafeCast::class,
+        'role' => SafeCast::class,
         'email_verified_at' => 'datetime',
     ];
 
 
     public function orders()
     {
-        return $this->hasMany('App\Order');
+        return $this->hasMany(Order::class);
     }
 
     public function comments()
     {
-        return $this->hasMany('App\Comment');
+        return $this->hasMany(Comment::class);
     }
 
     public function events()
