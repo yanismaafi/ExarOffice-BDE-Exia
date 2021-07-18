@@ -8,7 +8,6 @@ jQuery(document).ready(function($) {
 
 	"use strict";
 
-	
 
 	var siteMenuClone = function() {
 
@@ -246,6 +245,7 @@ jQuery(document).ready(function($) {
   	}) 
 
   };
+  
   siteScroll();
 
 });

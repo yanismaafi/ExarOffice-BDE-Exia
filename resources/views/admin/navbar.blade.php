@@ -20,7 +20,7 @@
                     <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
                         <a class="dropdown-item" href="{{ route('user.edit',auth::id()) }}">Profil</a>
                         <form action="{{ route('logout') }}" method="POST">
-                            @csrf
+                        @csrf
                             <button type="submit" class="dropdown-item">Déconnexion</button>
                         </form>
                     </div>

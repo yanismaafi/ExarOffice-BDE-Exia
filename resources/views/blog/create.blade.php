@@ -4,7 +4,7 @@
 
     <div class="site-section bg-light">
         <div class="container">
-            <div class="row mt-5 justify-content-center">
+            <div class="row justify-content-center">
                 <div class="col-md-6 text-center">
                    <h2 class="section-title mb-3">Ajouter un post :</h2>
                 </div>
@@ -19,12 +19,35 @@
                 
                         <div class="col-md-6 ml-auto product-title-wrap">
                         
-                            <form method="POST" id="postForm" enctype="multipart/form-data">
-                            
-                                @include('blog.form')
+                            <form action="{{ route('blog.store') }}" method="POST" autocomplete="off" is-dynamic-form>
+                            @csrf
 
+                                <div class="col-md-12 mb-3 mb-md-0">
+                                    <label class="text-black" for="title">Titre du post :</label>
+                                    <input type="text" name="title" id="title" class="form-control rounded-0 ">   
+                                    <div class="invalid-feedback title-error"></div>                                                                   
+                                </div>
+                        
                                 <div class="col-md-12">
-                                   <button id="submit" class="btn btn-black rounded-0 d-block d-lg-inline-block"><i class="fa fa-send"></i> Publier</button>
+                                    <label class="text-black" for="theme">Thème de votre poste :</label>
+                                    <input type="text" name="theme" id="theme" class="form-control rounded-0">
+                                    <div class="invalid-feedback theme-error"></div>                                                                   
+                                </div>
+                        
+                                <div class="col-md-12">
+                                    <label class="text-black" for="file">Séléctionner une image :</label> 
+                                    <input type="file" name="image" id="image" class="btn btn-dark rounded-0 d-block d-lg-inline-block">
+                                    <div class="invalid-feedback image-error"></div>                                                                   
+                                </div><br>
+                                
+                                <div class="col-md-12">
+                                    <label class="text-black" for="content">Contenu :</label> 
+                                    <textarea name="content" id="content" class="form-control rounded-0 " cols="30" rows="5"></textarea> 
+                                    <div class="invalid-feedback content-error"></div>                                                                   
+                                </div><br>
+                    
+                                <div class="col-md-12">
+                                   <button type="submit" class="btn btn-black rounded-0 d-block d-lg-inline-block"><i class="fa fa-send"></i> Publier</button>
                                 </div>
 
                             </form>
@@ -36,75 +59,6 @@
             </div>
         </div>
     </div>
-
-
-<script type="text/javascript">   
-
-    $("#submit").on('click',function(e){
-
-        e.preventDefault();
-
-        var title = $("input[name=title]").val();
-        var theme = $("input[name=theme]").val();
-        var content = $("textarea[name=content]").val();
-        var image = $('input[name=image]')[0].files[0];
-
-        var Data = new FormData($("#postForm")[0]);
-
-
-       $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-       $.ajax({
-    
-            type:'POST',
-            url: "{{ route('blog.store') }}",
-            typeData:'JSON',
-            data:Data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            
-           success:function(data)
-            {
-                if(data == 'posted')
-                {
-                    Swal.fire({             
-                        icon: 'success',
-                        title: 'Contenu créé',
-                        text: 'Votre contenu a été ajouté avec success !',
-                    }),
-                    
-                /* Reset the input after success post */
-                    $("input").val('');
-                    $("textarea").val('');  
-
-                }
-            },
-            
-            error:function(data)
-            {
-
-                if(data.status == 422)
-                {
-                    $.each(data.responseJSON.errors, function (i, error) {
-                        $("#postForm")
-                            .find('*[name="' + i + '"]')
-                            .addClass('is-invalid')
-                            .next()
-                            .append(error[0])
-                    });  
-                }
-            },
-        });
-        
-    });
-
-</script>
-
 
 @endsection
 

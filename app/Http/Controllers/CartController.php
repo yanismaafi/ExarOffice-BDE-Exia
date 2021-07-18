@@ -125,15 +125,14 @@ class CartController extends Controller
         return response()->json('deleted');
     }
 
-
     /**
      * Destroy cart.
      * 
      * 
      */
+    
     public function emptyCart()
     {
         Cart::destroy();
-        dd(1);
     }
 }

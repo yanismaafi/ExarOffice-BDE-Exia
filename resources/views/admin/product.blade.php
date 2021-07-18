@@ -5,8 +5,8 @@
     <div class="pb-5">
           <div class="container">
             <div class="row">
-                <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5" style="margin-top:100px">
-                    <a href="{{ route('product.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus fa-sm"></i>  Ajouter un produit</a>
+                <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+                    <a href="{{ route('product.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus fa-lg mr-1"></i>  Ajouter un produit</a>
                   
                   @if ($products->count() > 0)
                       <!-- Products cart table -->
@@ -37,7 +37,7 @@
 
                                         <th scope="row" class="border-0">
                                             <div class="p-2">
-                                            <img src="{{ asset('images/products/'.$product->image) }}" alt="image event" width="70" class="img-fluid rounded shadow-sm" title="{{ $product->title }}">
+                                            <img src="{{ asset('storage/'.$product->image) }}" alt="image product" width="70" class="img-fluid rounded shadow-sm" title="{{ $product->title }}">
                                             <div class="ml-3 d-inline-block align-middle">
                                                 <h5 class="mb-0"> 
                                                     <a href="{{ route('product.show',$product->slug) }}">{{ $product->title }}</a>
@@ -50,8 +50,15 @@
                                         <td class="border-0 align-middle"><strong>{{ $product->price }} DA.</strong></td>
                                         <td class="border-0 align-middle">
 
-                                          <a href="{{ route('product.edit',$product->slug) }}" class="btn btn-primary fa-lg"><i class="fa fa-edit"></i></a>
-                                        <button type="submit" class="delete btn btn-danger fa-lg" value="{{ $product->id }}"><i class="fa fa-trash"></i></button>
+                                            <div class="d-flex flex-row">
+
+                                                <a href="{{ route('product.edit',$product->id) }}" class="btn btn-primary fa-lg"><i class="fa fa-edit"></i></a>
+
+                                                <form action="{{ route('product.destroy',$product->id) }}" method="delete" is-dynamic-form>
+                                                @csrf
+                                                  <button href="{{ route('product.destroy',$product->id) }}" class="btn btn-danger fa-lg ml-1"><i class="fa fa-trash"></i></button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

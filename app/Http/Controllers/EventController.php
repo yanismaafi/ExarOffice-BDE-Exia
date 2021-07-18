@@ -4,33 +4,38 @@ namespace App\Http\Controllers;
 
 use auth;
 use Carbon\Carbon;
-use App\Models\Event;
 use App\Models\User;
+use App\Models\Event;
 use Cocur\Slugify\Slugify;
 use Illuminate\Http\Request;
-use App\Http\Requests\EventRequest;
-use App\Http\Requests\SearchRequest;
-
+use App\Helpers\ToastNotifier;
+use Illuminate\Support\Facades\Storage;
 
 
 class EventController extends Controller
 {
 
-    public function __construct()
+    public function __construct() 
     {
         $this->middleware('admin')->except(['index','show','search']);
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index() 
     {
         $events = Event::where('date','>=', Carbon::now())->Paginate(6);
-
         return view('events.index',compact('events'));
+    }
+
+    public function listEvent() 
+    {
+        $events = Event::Paginate(5);
+        return view('admin.event',compact('events'));
     }
 
     /**
@@ -38,7 +43,8 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+
+    public function create() 
     {
         return view('events.create');
     }
@@ -50,28 +56,33 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(EventRequest $request)
-    {
-        /* upload Image */
-        $image = $request->file('image');  
-        $imageFullName = $image->getClientOriginalName();
-        $imageName = pathinfo($imageFullName, PATHINFO_FILENAME);
-        $extension = $image->getClientOriginalExtension();
-        $file = time() . '_' . $imageName . '.' . $extension;
-        $image->move('images/events',$file);
 
-        $slug = new Slugify();
+    public function store (Request $request)
+    {  
+        if(request()->ajax()) {
 
-        Event::create([
-          'name' => ucfirst($request->name),
-          'slug' => $slug->slugify($request->name),
-          'date' => $request->date,
-          'nbrPlaces' => $request->nbrPlaces,
-          'image'  =>  $file,
-          'description' => ucfirst($request->description)
-        ]);
+            $request->validate([
+                'name' => 'required|string|min:4|max:100',
+                'date' => 'required|date',
+                'nbrPlaces' => 'required|integer|min:5',
+                'image' =>   'required|mimes:jpg,jpeg,png,webp,gif,svg|max:8388608',
+                'description' => 'required|string|min:8',
+            ]);
 
-        return response()->json('added');
+            $event = new Event();
+            $event->name = ucfirst($request->name);
+            $slug = new Slugify();
+            $event->slug = $slug->slugify($request->name);
+            $event->date = $request->date;
+            $event->nbrPlaces = $request->nbrPlaces;
+            $event->description = ucfirst($request->description);
+            $this->storeImage($request,$event);
+            
+            $event->save();
+
+            $notification = new ToastNotifier('success','Évènement ajouté','L\'évènement a été ajouté avec succès',null,null);
+            return $notification->toJson();
+        }
     }
 
     /**
@@ -80,14 +91,14 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($evenement)
-    {
-        $event = Event::where('slug',$evenement)->firstOrFail();
-
-        $events = Event::where('slug','!=',$evenement )->get();
-
-        return view('events.show',compact('event','events'));
+    public function show($id) 
+    {  
+        $event = Event::findOrFail($id);
+        $otherEvents = Event::where('id','!=',$id)->get();
+       
+        return view('events.show',compact('event','otherEvents'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -95,10 +106,10 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($slug)
-    {
-        $event = Event::where('slug',$slug)->firstOrFail();
 
+    public function edit($id) 
+    {
+        $event = Event::findOrFail($id);
         return view('events.edit',compact('event'));
     }
 
@@ -109,52 +120,41 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EventRequest $request, $slug)
+    public function update(Request $request, $id) 
     {
-        $event = Event::where('slug',$slug)->firstOrfail();
-        $slug = new Slugify();
+        if(request()->ajax()) {
 
-        $event->name = ucfirst($request->name);
-        $event->slug = $slug->slugify($request->name);
-        $event->date = $request->date;
-        $event->nbrPlaces = $request->nbrPlaces;
-        $event->description = ucfirst($request->description);
-
-        if( $request->file('image') )
-         {
-            $image = $request->file('image');
-            $imageFullName = $image->getClientOriginalName();
-            $imageName = pathinfo($imageFullName, PATHINFO_FILENAME);
-            $extension = $image->getClientOriginalExtension();
-            $file = time() . '_' . $imageName . '.' . $extension;
-            $image->move('images/events',$file);
+            $request->validate([
+                'name' => 'required|min:4|max:100',
+                'date' => 'required|date',
+                'nbrPlaces' => 'required|integer|min:5',
+                'image' =>   'sometimes|mimes:jpg,jpeg,png,webp,gif,svg|max:8388608',
+                'description' => 'required|min:8',
+            ]);
+            
+            $event = Event::findOrFail($id);
     
-            $event->image = $file;
-         }
-        
-        $event->save();
-        return redirect()->back();
+            $slug = new Slugify();
+            $event->name = ucfirst($request->name);
+            $event->slug = $slug->slugify($request->name);
+            $event->date = $request->date;
+            $event->nbrPlaces = $request->nbrPlaces;
+            $event->description = ucfirst($request->description);
+            $this->storeImage($request,$event);
+    
+            $event->save();
+    
+            $notification = new ToastNotifier('success','Évènement modifié','L\'évènement a été modifié avec succès','redirectToEventList',null);
+            return $notification->toJson();
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function search(Request $request)
     {
-        $event = Event::findOrFail($id);
-        $image_path = public_path('images/events/'.$event->image);
-        unlink($image_path);
-        $event->delete();
+        $request->validate([
+            'q' => 'required|string|alpha_num',
+        ]);
 
-        return response()->json('deleted');
-    }
-
-
-    public function search(SearchRequest $request)
-    {
         $query = $request->input('q');
 
         $events = Event::where('name','like',"%$query%")
@@ -164,27 +164,17 @@ class EventController extends Controller
         return view('events.search',compact('events'));
     }
 
-    public function listEvent()
-    {
-        $events = Event::Paginate(5);
 
-        return view('admin.event',compact('events'));
-    }
-
-
-
-    public function register($id)
+    public function register($id) 
     {  
-       
         $event = Event::findOrFail($id);
         $user = User::find(auth::id());
        
-        if($user->registered == true && $user->events->contains($id))
-        {
+        if($user->registered == true && $user->events->contains($id)){
             return response()->json('already registred');
+       
+        }else{
 
-        }else
-        {
             $event->decrement('nbrPlaces');
             $user->registred = true;
 
@@ -194,6 +184,39 @@ class EventController extends Controller
             return response()->json('success');
         }
         
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function destroy($id) 
+    {
+        $event = Event::findOrFail($id);
+    
+        $image_path = storage_path('app/public/'.$event->image);
+        
+        if(Storage::disk('public')->exists($event->image))
+        {
+            Storage::disk('public')->delete($event->image);
+        }
+
+        $event->delete();
+
+        $notification = new ToastNotifier('success','Évènement supprimé','L\'évènement a été supprimé avec succès','removeTableRow',$event->id);
+        return $notification->toJson();  
+    }
+
+
+    private function storeImage(Request $request, Event $event) 
+    {
+        if($request->image) 
+        {
+          $event->image = $request->image->store('Event','public');
+        }
     }
 
 }

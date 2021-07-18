@@ -4,7 +4,7 @@
 
     <div class="site-section bg-light">
         <div class="container">
-            <div class="row mt-5 justify-content-center">
+            <div class="row justify-content-center">
                 <div class="col-md-6 text-center">
                 <h2 class="section-title mb-3">Ajouter un évenement :</h2>
                 </div>
@@ -18,93 +18,50 @@
                 
                         <div class="col-md-6 ml-auto product-title-wrap">
                         
-                            <form method="POST" enctype="multipart/form-data" id="eventForm">
-                            
-                                @include('events.form')
-
-                                <div class="col-md-12">
-                                   <button id="submit" class="btn btn-black rounded-0 d-block d-lg-inline-block"><i class="fa fa-plus"></i> Ajouter l'évenement</button>
+                            <form action="{{ route('event.store') }}" method="POST" autocomplete="off" is-dynamic-form>
+                            @csrf
+                                <div class="col-md-12 mb-3 mb-md-0 mt-2">
+                                    <label class="text-black" for="name">Nom de l'évenement :</label>
+                                    <input type="text" name="name" id="name" class="form-control rounded-0">     
+                                    <div class="invalid-feedback name-error"></div>                                                                   
                                 </div>
+                            
+                                <div class="col-md-12 mt-2">
+                                    <label class="text-black" for="date">Date de l'évenement :</label>
+                                    <input type="date" name="date" id="date" class="form-control rounded-0"> 
+                                    <div class="invalid-feedback date-error"></div>                                                                   
+                                </div>
+                            
+                                <div class="col-md-12 mt-2">
+                                    <label class="text-black" for="nbrPlaces">Nombre de place :</label> 
+                                    <input type="text" name="nbrPlaces" id="nbrPlaces" class="form-control rounded-0">       
+                                    <div class="invalid-feedback nbrPlaces-error"></div>                                                                   
+                                </div><br>
+                                
+                                <div class="col-md-12">
+                                    <label for="image" class="form-label">Image de l'évènement :</label>
+                                    <input class="form-control" type="file" name="image" id="image">  
+                                    <div class="invalid-feedback image-error"></div>                                                                                                                                       
+                                </div><br>
 
+                                <div class="col-md-12 mt-2">
+                                    <label class="text-black" for="description">Description :</label> 
+                                    <textarea class="form-control rounded-0" name="description" id="description" cols="30" rows="5"></textarea>     
+                                    <div class="invalid-feedback description-error"></div>                                                                   
+                                </div><br>
+                            
+                                <!-- Submit button-->
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-black rounded-0 d-block d-lg-inline-block"><i class="fa fa-edit fa-x2"></i> Ajouter l'évenement</button>
+                                </div>
                             </form>
                         </div>
-                        
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
-
-
-
-    <script type="text/javascript">   
-
-        $("#submit").on('click',function(e){
-    
-            e.preventDefault();
-    
-            var name = $("input[name=name]").val();
-            var date = $("input[name=date]").val();
-            var nbrPlaces = $("input[name=nbrPlaces]").val();
-            var description = $("textarea[name=description]").val();
-            var image = $('input[name=image]')[0].files[0];
-    
-            var Data = new FormData($("#eventForm")[0]);
-     
-           $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-    
-           $.ajax({
-        
-                type:'POST',
-                url: "{{ route('event.store') }}",
-                typeData:'JSON',
-                data:Data,
-                processData: false,
-                contentType: false,
-                cache: false,
-                
-               success:function(data)
-                {
-                    if(data == 'added')
-                    {
-                        Swal.fire({             
-                            icon: 'success',
-                            title: 'Evènement ajouté',
-                            text: 'L\'évènement a été ajouté avec succèss !',
-                        }),
-                        
-                    /* Reset the input after success post */
-                        $("input").val('');
-                        $("textarea").val('');  
-    
-                    }
-                },
-                
-                error:function(data)
-                {
-                    if(data.status == 422)
-                    {
-                        $.each(data.responseJSON.errors, function (i, error) {
-                            $("#eventForm")
-                                .find('*[name="' + i + '"]')
-                                .addClass('is-invalid')
-                                .next()
-                                .append(error[0])
-                        });  
-                    }
-                },
-            });
-            
-        });
-    
-    </script>
-    
-
+    </div>    
 
 @endsection
+
 

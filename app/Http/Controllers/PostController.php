@@ -6,6 +6,7 @@ use auth;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Helpers\ToastNotifier;
 use App\Http\Requests\BlogRequest;
 use App\Http\Requests\CommentRequest;
 
@@ -22,7 +23,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('created_at', 'desc')->paginate(6);
+        $posts = Post::orderByDesc('created_at')->paginate(6);
 
         return view('blog.index',compact('posts'));
     }
@@ -43,27 +44,28 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store (BlogRequest $request)
+    public function store (Request $request)
     {
-        if( $request->file('image') )
+        if(request()->ajax())
         {
-           $image = $request->file('image');
-           $imageFullName = $image->getClientOriginalName();
-           $imageName = pathinfo($imageFullName, PATHINFO_FILENAME);
-           $extension = $image->getClientOriginalExtension();
-           $file = time() . '_' . $imageName . '.' . $extension;
-           $image->move('images/blog',$file);
+            $request->validate([
+                'title' =>   'required|string|min:4|max:100',
+                'theme' =>   'required|string|min:2|max:30',
+                'content' => 'required|string|min:10',
+                'image'  =>  'required|image|mimes:jpeg,jpg,png,gif|max:10000' //max : 10000Kb = 10 mb
+            ]);
+
+            $post = new Post();
+            $post->author = auth::user()->name;
+            $post->title = ucfirst($request->title);
+            $post->theme = ucfirst($request->theme);
+            $post->content = ucfirst($request->content);
+            $this->storeImage($request, $post);
+            $post->save();
+            
+            $notification = new ToastNotifier('success','Post ajouté', 'Le post a été ajouté avec succès',null,null);
+            return $notification->toJson();
         }
-
-        Post::create([
-           'author' => auth::user()->name,
-           'title'  => $request->title,
-           'theme'  => $request->theme,
-           'content'=> $request->content,
-           'image'  => $file,
-        ]);
-
-        return response()->json('posted');
     }
 
     /**
@@ -72,10 +74,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($blog)
+    public function show($id)
     {
-        $post = Post::find($blog);
-
+        $post = Post::findOrfail($id);
         return view('blog.show',compact('post'));
     }
 
@@ -85,7 +86,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function comment (CommentRequest $request)
+    public function comment (Request $request)
     {
         $request->validate([
             'content' => 'required|string|max:255',
@@ -100,9 +101,36 @@ class PostController extends Controller
 
         $comment->save();
 
-        return response()->json('sent');
+        return response()->json('sent',200);
 
     }
+
+    public function destroy($id)
+    {
+        $post = Post::findOrFail($id);
+
+        $image_path = storage_path('app/public/'.$post->image);
+      
+        if(Storage::disk('public')->exists($post->image))
+        {
+            Storage::disk('public')->delete($post->image);
+        }
+
+        $post->delete();
+
+        $notification = new ToastNotifier('success','Post supprimé','Le post a été supprimé avec succès','removeTableRow',$post->id);
+        return $notification->toJson();  
+    }
+
+
+    private function storeImage(Request $request, Post $post) 
+    {
+        if($request->image) 
+        {
+          $post->image = $request->image->store('Blog','public');
+        }
+    }
+
 
 
 }

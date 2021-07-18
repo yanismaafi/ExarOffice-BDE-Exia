@@ -22,7 +22,7 @@
                 <hr>
                 
                 <!-- Preview Image -->
-                <img class="img-fluid rounded" src="{{asset('images/blog/'. $post->image)}}" alt="Image">
+                <img class="img-fluid rounded" src="{{ asset('storage/'. $post->image) }}" alt="Image">
                 <hr>
                 
                 <!-- Post Content -->
@@ -35,8 +35,8 @@
                     </footer>
                 </blockquote><br>
                 <hr>
-                <p class="lead"> Commentaires 
-                    <small id="count"> {{ $post->comments->count() }}</small>
+                <p class="lead"> Commentaires &nbsp;
+                    <span id="count"> {{ $post->comments->count() }}</span>
                 </p>
                 
                 <!-- Comments -->
@@ -146,11 +146,9 @@
 
 
 
-
 <script type="text/javascript">
     
-    
-    $(".comment").on('click',function(e){
+    $(".comment").on('click',function(e) {
         
         e.preventDefault();
         
@@ -174,49 +172,50 @@
             type:'POST',
             url:"{{ route('blog.comment') }}",
             dataType:'JSON',
-            data:{ content:content, post_id:post_id },
+            data:{ content: content, post_id: post_id },
             
             beforeSend:function(){
                 sendEffect.text('Envoi...').addClass('disabled');
             },
             
-            success:function(data)
-            {
+            success:function(data) {
                 
-                if(data == 'sent')
-                {
+                if(data == 'sent') {
+
                     $('textarea').val('');
                     
                     var html = '<div class="media mb-4">\
                                   <img id="picture" class="d-flex mr-3 rounded-circle" src="{{ asset('images/users/default_picture.png') }}" height="50px"  alt="Commenter">\
                                   <div class="media-body">\
-                                  <h5 class="mt-0"> {{ auth::user()->name }}</h5>'+content+'<div>\
+                                  <h5 class="mt-0"> {{ auth::user()->name }}</h5>'+ strip_tags(content) +'<div>\
                                 <div>';
                                     
-                                $(".comments").prepend(html);
-                                $("#picture").prop("src",profile_picture); 
-                                $(".content").val('');
-                                sendEffect.text('Envoyer').removeClass('disabled');    
-                                
-                                countComment++;   //increase nbr of comment
-                                $("#count").html(countComment);                                    
+                    $(".comments").prepend(html);
+                    $("#picture").prop("src", profile_picture); 
+                    $(".content").val('');
+                    sendEffect.text('Envoyer').removeClass('disabled');    
+                    
+                    countComment++;   //increase nbr of comment
+                    $("#count").html(countComment);                                    
                  }                          
             },
                             
-            error:function (data) 
-            {
-                if(data.status == 422) 
-                {
+            error:function (data) {
+                if(data.status == 422) {
                     $('textarea[name=content]').addClass("is-invalid"); 
                     $('#error_msg').text(data.responseJSON.errors.content); 
                     sendEffect.text('Envoyer').removeClass('disabled');      
  
                 }
             },                            
-        });                  
-                        
+        });                      
     });
-                    
+
+    function strip_tags(str) {
+        str = str.toString();
+        return str.replace(/<\/?[^>]+(>|$)/g, "");
+    }
+
 </script>
                 
                 

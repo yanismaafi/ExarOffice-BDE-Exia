@@ -20,7 +20,7 @@
                 
                   <div class="col-md-6 col-lg-4 mb-4 mb-lg-4">
                     <div class="h-entry">
-                      <img src="{{ asset('images/blog/' . $post->image) }}" alt="Image" class="img-fluid">
+                      <img src="{{ asset('storage/' . $post->image) }}" alt="Image" class="img-fluid">
                       <h2 class="font-size-regular"><a href="{{ route('blog.show',$post->id) }}" class="text-black">{{ ucfirst($post->title) }}</a></h2>
                       <div class="meta mb-4">{{ $post->author }}
                         <span class="mx-2">&bullet;</span> {{\Carbon\Carbon::parse($post->created_at)->toFormattedDateString()}}<span class="mx-2">&bullet;</span> 

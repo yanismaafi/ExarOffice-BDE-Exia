@@ -1,8 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
 
- 
 <div class="site-section" id="products-section">
     <div class="container">
 
@@ -12,7 +10,6 @@
           <p>Le bureau des éleves du centre d'Alger "ExarOffice" met à disposition un ensemble de Goodies et d'accéssoirs à prix raisonable, profitez-en !</p>
         </div>
       </div>
-
 
       @if ($products->count() > 0)
       
@@ -28,16 +25,16 @@
                 <div class="col-lg-4 col-md-6 mb-5">
                   <div class="product-item">
                     <figure>
-                    <img src="{{asset('images/products/'. $product->image) }}" alt="Image" style="height:250px" class="img-fluid">
+                    <img src="{{asset('storage/'. $product->image) }}" alt="Image" class="img-fluid">
                     </figure>
                     <div class="px-4">
-                      <h3><a href="{{ route('product.show',$product->slug) }}">{{ $product->title }}</a></h3>
+                      <h3><a href="{{ route('product.show',$product->id) }}">{{ $product->title }}</a></h3>
                       <p class="mb-4"> <strong> Catégorie :</strong> {{ $product->category->name }}</p>                
                       <div class="mb-4"> 
                       <div class="price"><strong class="text-black">{{ $product->price }} </strong> DA.</div>
                       </div>
                       <div>
-                        <a href="{{ route('product.show',$product->slug) }}" class="btn btn-black mr-1 rounded-0">Voir l'article</a>
+                        <a href="{{ route('product.show',$product->id) }}" class="btn btn-black mr-1 rounded-0">Voir l'article</a>
                       </div>
                     </div>
                   </div>
@@ -59,15 +56,10 @@
                 <p class="lead"> Rester connecté pour être infromé sur un éventuel arrivage.</p>
               </div>
             </div>
-          </div>      
-
-          
+          </div>       
       @endif
 
     </div>
   </div>
 
-
- 
-    
 @endsection

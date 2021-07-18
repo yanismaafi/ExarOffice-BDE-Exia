@@ -123,7 +123,7 @@
         <div class="jumbotron jumbotron-fluid" style="height:520px">
             <div class="container">
                 <div class="clearfix mt-5">
-                    <img src="{{asset('images/error_content/empty_cart.png')}}" class="img-fluid pull-left mr-3 ml-2" alt="Icon" style="height:150px">
+                    <img src="{{ asset('images/error_content/empty_cart.png') }}" class="img-fluid pull-left mr-3 ml-2" alt="Icon" style="height:150px">
                     <h3 class="display-4">Votre panier est vide ...</h3>
                 </div>
             </div>

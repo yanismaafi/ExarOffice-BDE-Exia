@@ -1,11 +1,9 @@
 @extends('layouts.app')
-
 @section('content')
-
 
 <div class="site-section bg-light">
     <div class="container">
-      <div class="row mt-5 justify-content-center">
+      <div class="row justify-content-center">
         <div class="col-md-6 text-center">
           <h2 class="section-title mb-3">Détail du produit</h2>
           <p> Vous pouvez commander le produit dès maintenant et le recevoir en quelques jours seulement, profitez-en ! </p>
@@ -15,7 +13,7 @@
   <div class="bg-white py-4 mb-4">
      <div class="row mx-4 my-4 product-item-2 align-items-start">
         <div class="col-md-6 mb-5 mb-md-0">
-            <img src="{{ asset('images/products/'.$product->image)}}" alt="Image" class="img-fluid">
+            <img src="{{ asset('storage/'.$product->image)}}" alt="Image" class="img-fluid">
         </div>
      
         <div class="col-md-5 ml-auto product-title-wrap">
@@ -24,15 +22,12 @@
             <p class="mb-4 font-weight-bold"> <strong class="text-black">Catégorie : </strong> {{ ucfirst($product->category->name) }}</p>
             <p class="mb-4">{{ $product->description }}</p>
 
-           
-
             <div class="mb-4"> 
               <h3 class="price font-weight-bold h5"> 
                 <strong class="text-black"> Quantité :</strong>           
                 <input type="number" name="qty" value="1" min="1" max="20" step="1" style="width:60px">
               </h3> 
             </div>
-
 
             <div class="mb-4"> 
               <h3 class="price font-weight-bold h5"> 

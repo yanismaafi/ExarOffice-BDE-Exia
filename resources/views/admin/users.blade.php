@@ -5,8 +5,8 @@
     <div class="pb-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5" style="margin-top:100px">
-                    <a href="" class="btn btn-primary mb-3"><i class="fa fa-users fa-lg"></i> Listes des utilisateurs :</a>
+                <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+                    <a href="" class="btn btn-primary mb-3"><i class="fa fa-users fa-lg mr-1"></i> Listes des utilisateurs :</a>
    
                     <!-- Users table -->
                     <div class="table-responsive">

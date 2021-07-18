@@ -1,4 +1,4 @@
-        @csrf
+       
         <div class="col-md-12 mb-3 mb-md-0">
             <label class="text-black" for="title">Titre du post :</label>
             <input type="text" name="title" class="form-control rounded-0 ">   
