@@ -76,7 +76,7 @@
     
 
       <!-- Contact Section -->
-      @include('includes.contact')
+        @include('includes.contact')
       <!-- End Contact Section -->
 
     

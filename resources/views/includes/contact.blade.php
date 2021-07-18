@@ -12,7 +12,7 @@
                 
                 
                 
-                <form method="POST" class="p-5" autocomplete="off">
+                <form action="{{ route('home.contact') }}" method="POST" class="p-5" autocomplete="off" is-dynamic-form>
                 @csrf 
                     <h2 class="section-title text-white font-weight-bold mb-5"> <u> Votre message :</u></h2> 
                     
@@ -20,10 +20,12 @@
                         <div class="col-md-6 mb-3 mb-md-0">
                             <label class="text-white font-weight-bold" for="fname">Nom :</label>
                             <input type="text" id="lname" name="lname"  class="form-control rounded-0" required>
+                            <div class="invalid-feedback lname-error"></div>
                         </div>
                         <div class="col-md-6">
                             <label class="text-white font-weight-bold" for="lname">Prenom :</label>
                             <input type="text" id="fname" name="fname" class="form-control rounded-0" required>
+                            <div class="invalid-feedback fname-error"></div>
                         </div>
                     </div>
                     
@@ -32,6 +34,7 @@
                         <div class="col-md-12">
                             <label class="text-white font-weight-bold" for="email">Email :</label> 
                             <input type="email" id="email" name="email" class="form-control rounded-0" required>
+                            <div class="invalid-feedback email-error"></div>
                         </div>
                     </div>
                     
@@ -40,6 +43,7 @@
                         <div class="col-md-12">
                             <label class="text-white font-weight-bold" for="subject">Sujet :</label> 
                             <input type="subject" id="subject" name="subject" class="form-control rounded-0" required>
+                            <div class="invalid-feedback subject-error"></div>
                         </div>
                     </div>
                     
@@ -47,17 +51,17 @@
                         <div class="col-md-12">
                             <label class="text-white font-weight-bold" for="message">Message :</label> 
                             <textarea name="message" id="message" cols="30" rows="7" class="form-control rounded-0" placeholder="Tapez votre message ou votre question ..." required></textarea>
+                            <div class="invalid-feedback message-error"></div>
                         </div>
                     </div>
                     
                     <div class="row form-group">
                         <div class="col-md-12">
-                            <button id="submit" class="btn btn-primary" >
+                            <button type="submit" class="btn btn-primary" >
                                 <i class="fa fa-send"></i> Envoyer
                             </button>
                         </div>
                     </div>
-                    
                 </form>
             </div>
             

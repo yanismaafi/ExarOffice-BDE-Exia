@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 /* Home Routes */
 Route::get('/','HomeController@index')->name('home.index');
-Route::post('/','HomeController@contact')->name('home.contact');
-Route::get('/a-propos','HomeController@about')->name('home.about');
+Route::post('contact','HomeController@contact')->name('home.contact');
+Route::get('about','HomeController@about')->name('home.about');
 Route::get('/admin/accueil','HomeController@index')->name('admin.index')->middleware('admin');
 
 
